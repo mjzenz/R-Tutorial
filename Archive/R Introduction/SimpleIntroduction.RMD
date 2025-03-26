@@ -1,0 +1,781 @@
+---
+title: "R for Office Drones"
+author: "Michael J Zenz"
+email: "zenz@wisc.edu"
+affiliation: "AIM L&S, University of Wisconsin - Madison"
+output: html_document
+---
+
+
+
+# {.tabset}
+
+
+
+
+## Basics
+
+### Introduction
+R is a statistical programming language that also is useful for processing data and preparing reports. You perform operations by inputting text commands into a console. This text-based system provides an easy record of all commands performed, which makes it easy to revise a data process at any point.  
+
+You can save text commands to text files called **scripts**. When run, these scripts are processed from top to bottom. You can also run particular lines or chunks of code at a time. Scripts are just regular text files saved with the file extension .R. Alternatively, you can run commands that you type directly into the R console. But by doing this you won't keep a record of what you have run, and so it is bad form. Almost all of your work with R will be done in scripts.
+
+Most operations are performed through the use of various **functions**, which simplify complex operations into a single line of text. A number of functions come built into R (**Base-R**), but you can expand the set of functions available to you by installing various **packages**. More on this in a later section.
+
+In this section, I will describe a number of Base-R functions (along with a few functions outside of Base that are vital). Most of these are foundational to the language, and so are important to understand before moving on to other functions that make using R easier.
+
+### Variables 
+
+You assign values to variables in memory using the **<-** operator. 
+
+```{r}
+#This assigns 4.3 to the variable x
+x <- 4.3
+
+```
+
+In the example above you can think of 4.3 as being put into a variable called *x*. Any line with a **#** in front of it is interpreted by R as a **comment**, and so is ignored by it when it runs. Lines can continue by using a carriage return, as long as an operator is included just before the return. This will help you to keep code from sprawling.
+
+You can see what is in x by just typing those variables into the terminal (or using R-studio's Environment feature at the top right pane to look at them).
+
+```{r}
+x
+
+```
+
+### Data Types
+The **output** of the R command "x" can be seen in the box below that command ("## [1] 4.3").  "##" in this introduction just indicates that this is R output printed here - you won't see that part in your R terminal. You will just see "[1]", which is the item index(more on that later), and the value in the variable "4.3".
+
+R will assign a **variable type** when you assign a value to a variable. You can always write over a variable with new values. Here are a few types. There are more types that I will introduce later, because they are a bit more complex.
+
+```{r}
+#number
+y <- 3
+
+#character string
+z <- "Wisconsin"
+i <- "Texas"
+
+#logical
+tf.a <- TRUE
+tf.b <- FALSE
+
+#date - these are like character strings, but allow for useful functions for dates
+date1 <- as.Date("2020-06-23")
+weekdays(date1)
+
+
+#factor - these are like character strings, but only allow for a set of levels as values. 
+#         They will be more useful when they are vectors, described below.
+factor1 <- factor("Wisconsin", levels = c("California", "Idaho", "New York", "Wisconsin"))
+
+
+
+
+```
+
+### Operators
+
+Along with data types there are mathematical and logical operators. For the expected outputs of logical operators see their [truth tables](https://sites.millersville.edu/bikenaga/math-proof/truth-tables/truth-tables.html).
+
+```{r}
+
+#Mathematical Operators output numerical values
+1+1
+x+y
+x/y
+x^2
+x^y
+#Square root requires a function rather than an operator
+sqrt(x)
+
+
+#These can be output to variables too.
+z <- x*y
+z
+
+#Logical Operators output logical values, some use mathematical inputs...
+
+#is greater than
+x > y
+# is less than
+x < y
+# is equal to, notice that you use == for logical equals
+x == y
+# is not equal to
+x != y
+
+#these can also be output to variables
+tf.c <- x > y
+tf.c
+
+#others use logical inputs...
+
+#logical "and"
+TRUE & TRUE
+TRUE & FALSE
+FALSE & FALSE
+tf.a & tf.c
+
+#logical "or" (inclusive)
+TRUE | TRUE
+TRUE | FALSE
+FALSE | FALSE
+tf.a | tf.c
+
+#logical "not"
+!TRUE
+!FALSE
+!(tf.a & tf.c)
+
+#equal and not equal, can be used with any data type to determine if the two values are equal.
+TRUE == FALSE
+"Wisconsin" == "Texas"
+"Wisconsin" == "Wisconsin"
+"Wisconsin" != "Texas"
+
+```
+
+
+
+### Vectors
+You can also construct sets of values called **vectors**. A vector in programming (distinct from its use in math or physics) is a one-dimensional array of values (examples below). One way to crate a vector is with the combine function, **c()**. This provides a chance to "call" (use) a **function**. Functions are called using their name ("c" in this case) and the parentheses containing **parameters**. Parameters contain the information the function needs to do what it is meant to do. Some functions will have lots of different types of information they need to operate, whereas others will need only one piece of information (or even none).  Functions can also be set up with various default parameters, which can be omitted when it is called if you want to keep those defaults. Some functions like "[]" and ":" don't use this format, but those are special and rare.
+
+Below I create several vectors. Notice that they can be created out of any type of data and even existing variables. The variable is shown right after the code for creating it. 
+
+```{r}
+#A number vector inputting all values
+vnum1 <- c(5, 10, 56, 9, 11)
+vnum1
+
+# A number vector where some values are already stored in variables
+vnum2 <- c(x, y, 8 )
+vnum2
+
+# A number vector that is a combination of two existing vectors
+vnum3 <- c(vnum1,vnum2)
+vnum3
+
+# A character vector
+vchar1 <- c(z, i, "Maryland", "California")
+vchar1
+
+# A logical vector
+vlogic1 <- c(TRUE, TRUE, FALSE, tf.a, tf.b)
+vlogic1
+
+# Vectors can only contain the same data type, so mixed vectors will be converted to characters, which is the most inclusive type.
+vlogic.mixed1 <- c(vnum3, vchar1, vlogic1)
+vlogic.mixed1
+```
+
+There are a number of ways to create a vector without naming each item. A couple of commonly used methods are the "**:**" and the **seq()** functions, which produce **sequences** of numbers. In seq() "from", "to", and "by" are all parameters. Unlike for variables, you use the **=** to assign values to them instead of the "<-".
+
+```{r}
+
+#A sequence of numbers from 2 to 18
+sq1 <- 2:18
+sq1
+
+#A sequence of numbers from 2 to 18 by 2s
+sq2 <- seq(from = 2, to = 18, by  = 2)
+sq2
+
+```
+
+
+
+You can specify the location in a vector by using an **index**.  This also allows you to **subset** with the "[]" function. At this point you should also realize that the "[1]" you see at the beginning of all R output is the index at that point in the vector. With each new row of output, R will tell you the first index in that row by using the "[]". There are a variety of ways to subset using these indexes.
+
+
+```{r}
+
+# The 3rd number in the vnum1 vector
+subsetnum1 <- vnum1[3]
+subsetnum1
+
+
+# The 2nd through 5th index in vnum3
+
+subsetnum2 <- vnum3[2:5]
+subsetnum2
+
+# Using the sequence saved above, the 2nd through 18th items, by 2s of vlogic.mixed1
+
+subsetmixed1 <- vlogic.mixed1[sq2]
+subsetmixed1
+
+```
+
+Once you can use vectors, you can start describing those vectors using a number of important functions. There is also the "**%in%**" operator that returns true if the value on the left is in the vector on the right.  
+
+```{r}
+# vnum3
+vnum3
+# mean of vnum3
+mean(vnum3)
+
+# median of vnum3
+median(vnum3)
+
+# number of items in vnum3
+length(vnum3)
+
+# in the vector
+
+10 %in% vnum3
+
+
+
+```
+
+Operations and functions can also be applied to vectors much like they are to values. When vectors of the same size are used in an operation, the operation applies to each index in the vectors in turn and the results are in a new vector. For instance if one vector is added to another, the first index of the first vector is added to the first index in the second vector and so on. When one value is involved in an operation with a vector that value is operated on all indexes of the vector. When two vectors of different size are involved in an operation, the result is more complex. So you should avoid this unless you know what you are doing.
+
+```{r}
+# single number operation
+vnum4 <- vnum3 * 2
+vnum4
+
+# operation between two vectors
+vnum3 + vnum4
+
+
+# Operations can be complex as well and can utilize as many vectors as needed
+vnum5 <- vnum4 - (vnum3 + 10)
+vnum5
+
+
+#Logical vectors also work in the same way
+
+vnum5 > vnum4
+
+```
+It is a bit obscure at this point why operations between vectors is so important, but this will serve the basis of creating new data columns using two (or more) existing columns.
+
+## Data
+
+### Matrices and Data Frames
+
+
+Whereas a vector is a single dimensional set of values, a **matrix** is multidimensional. Like vectors, matrices can only contain values of the same type. They are primarily mathematical objects that probably won't be of great use to you. However, they are similar enough to data frames, which are the primary multi-dimensional data structures in R, that I will spend some time introducing them. In particular, the process of subsetting matrices is instructive for subsetting data frames.
+
+```{r}
+
+# create a matrix by providing a vector and the number of rows and/or columns.
+
+matrix1 <- matrix(sq2, ncol = 3)
+matrix1
+
+
+```
+The column and row labels for this matrix should be familiar to you as the subset brackets ("[]"). However, now they also contain a comma: for rows it is just after the index and for columns it is just before the index. This is how two dimensional indexes are specified in R, and it will be very important for understanding how this is used to subset data in R.
+
+Let's begin exploring how you subset two dimensional data in R by extracting cells from this matrix. 
+
+```{r}
+# value in the 2nd row and 1st column
+matrix1[2,1]
+
+# all values in the 2nd row
+matrix1[2,]
+
+#all values in the 1st column
+matrix1[,1]
+
+#all values in the 2nd and 3rd columns
+matrix1[,c(2,3)]
+
+```
+
+Notice that the last subset produces another matrix rather than just a vector, because there are still two columns - it is still two-dimensional.  
+
+
+**Data frames** are also two-dimensional data but they have a number of additional features that make them the primary data structures in R. Most importantly, they allow for columns of different data types and descriptive names. A data frame requires that a set of equally long vectors be bound, such that each vector forms a column.  I'll be introducing some example data frames that come with R, but they can also be made out of vectors using the data.frame() function. 
+
+
+```{r}
+
+
+# Each column in a data frame is a vector
+rabbit_names <- c("Ruthie", "Smokey", "Bug", "Wicket", "Wesley", "Heather", "Ava", "Cinnabun", "Oliver" , "Chestnut", "Daisy", "Cadbury", "Chickpea", "Storm", "Mr. Fuzzy Foot", "Bouncer", "Midnight")
+
+rabbit_ears <- c( "lop", "up" , "up", "up", "up", "lop", "up", "up", "lop", "up", "up", "up", "up", "up", "up", "up", "up")
+
+rabbit_sex <- c("F","F" ,"M", "M", "M", "F", "F", "M", "M", "F", "F", "F", "F", "M", "M", "M", "F")
+
+rabbit_partner <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "Chickpea", "Cadbury", NA, "Bouncer", "Mr. Fuzzy Foot", NA)
+
+rabbit_weight_lbs <- c(3.5, 5.8 ,2.5 , 2.6, 3.2, 4.2,3.9, 2.7, 3.3, 4.5, 2.9, 6, 5.9, 4.9, 3.9, 4, 4.3)
+rabbit_length_inch <- c(10, 17, 8, 7.5, 9, 14, 12, 8, 10, 13, 8.5, 18, 19, 14, 12, 12, 14)
+rabbit_age_years <- c(2,  5, 1.5, .5,.8, 2,3, 1.3,.7,2, 2.5, 3, 3, 1.5, 1, 1, 2.5)
+
+# You can use the data.frame() function to create a data frame out of vectors.
+# Each vector (right) is assigned to a column name (left) using the "=".
+rabbits <- data.frame(rabbit_name = rabbit_names, ear_type = rabbit_ears, sex = rabbit_sex,
+                      partner = rabbit_partner, weight_lbs = rabbit_weight_lbs, 
+                      length_inches = rabbit_length_inch, age = rabbit_age_years)
+
+# Data frame can be output to the terminal or viewed in Environment.
+rabbits
+
+# You can see the structure of the data frame with the str() function.
+str(rabbits)
+
+```
+
+Column names can be used to retrieve a column (a vector) by using the "**$**" function. New columns can also be created, and column values can be changed this way. I make a silly BMI metric for rabbits.
+
+```{r}
+
+# "$" extracts one column just like [] can
+rabbits$rabbit_names
+
+# Calculating a new column from values in other columns.
+# This follows the same rules as vector multiplication
+rabbits$BMI <- rabbits$weight_lbs/(rabbits$length_inches^2) * 703
+
+rabbits$BMI
+
+```
+
+
+A data frame can be **subset** much like a matrix using indexes, but there are also more convenient ways of subsetting. For instance, you can select columns by **column name** instead of index.  You can also subset rows using a **logical condition**.  Finally, you can recode columns, either by creating a new column or changing an existing column, by selecting a subset of the data frame to change.
+
+```{r}
+
+# Data frames have column names that you can access using the function colnames()
+# the column names are just an ordered vector of character strings.
+
+colnames(rabbits)
+
+# You can also alter colnames using the same function.
+colnames(rabbits) <- c("Name", "EarType", "Sex", "BondPartner", "Weight", "Length", "Age", "BMI")
+
+# You can provide [] a vector of character strings to subset those columns.
+
+rabbits.sex <- rabbits[,c("Name", "Sex")]
+rabbits.sex
+
+# To subset rows by condition, you can use the which() function. It outputs the indexes 
+# of rows satisfying the condition. The logical condition can be as complex as necessary.
+
+rabbits.female <- rabbits[which(rabbits$Sex == "F"),]
+# this only contains female rabbits
+rabbits.female
+
+# You can also subset columns and rows at the same time.
+ rabbits.sex.female <- rabbits[which(rabbits$Sex == "F"),c("Name", "Sex")]
+ 
+# Let's look a bit closer at what each part of the row subset outputs.
+# The logical conditional outputs a logical vector 
+#   that corresponds to which rows match the condition.
+rabbits$Sex == "F"
+
+# The which() function takes that vector as input and outputs the indexes that are TRUE
+which(rabbits$Sex == "F")
+
+# Remember that the [] takes indexes as inputs and so outputs the rows that match the condition.
+rabbits[which(rabbits$Sex == "F"),]
+  
+
+#Create a new variable that makes weight categorical.
+#You need to create the column first with NA data, 
+#because otherwise you will only create the variable for a subset of rows.
+#That would create an error.
+#Notice that this is coded in a way that is very clear but more complex than needed.
+rabbits$BMI_category <- NA
+rabbits[which(rabbits$BMI < 15),]$BMI_category <-"Underweight"
+rabbits[which(rabbits$BMI >= 15 & rabbits$BMI < 25),]$BMI_category <-"Healthy Weight"
+rabbits[which(rabbits$BMI >= 25 & rabbits$BMI < 32),]$BMI_category <-"Overweight"
+rabbits[which(rabbits$BMI >= 32),]$BMI_category <-"Very Overweight"
+
+
+
+
+```
+
+
+### Merging
+
+Two data frames can be **merged** on a set of common columns using the "merge()" function. This is similar to a "join" in sql. The default behavior of merge() is to retain only those rows that match on the specified columns. You can user the all.x and all.y parameters to retain all rows from the first data frame, all rows from the second data frame, or all rows from both data frames.
+
+```{r}
+#Here is a compliment data frame to the rabbits data frame. 
+adoption.applications <- data.frame(applicants = c("John Smith", "Jane Goodwin", "Katie Walker",  "Katie Walker", "Fred Flinstone", "Liz Cooper","Liz Cooper",  "Liz Cooper","Dylan Strong", "Amy Cohen"), rabbit_name= c("Oliver", "Oliver", "Cadbury", "Chickpea", "Cinnabun", "Storm", "Ruthie", "Wicket", "", ""), OtherPets = c(TRUE, FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, FALSE, TRUE), Children = c(FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, TRUE))
+
+
+#Notice that adoption.applications shares a column with the rabbits data frame.
+
+#This keeps only rows that match
+rabbits.applications <- merge(x = rabbits, y = adoption.applications, 
+                              by.x = "Name", by.y = "rabbit_name")
+
+rabbits.applications
+
+#This keeps all rows in rabbits ("left join")
+all.rabbits.applications <- merge(x = rabbits, y = adoption.applications, 
+                              by.x = "Name", by.y = "rabbit_name", all.x = TRUE)
+
+all.rabbits.applications
+
+#This keeps all rows in adoption.applications ("right join")
+rabbits.all.applications <- merge(x = rabbits, y = adoption.applications, 
+                              by.x = "Name", by.y = "rabbit_name", all.y = TRUE)
+rabbits.all.applications
+
+
+#This keeps all rows from both tables ("full outer join")
+all.rabbits.all.applications <- merge(x = rabbits, y = adoption.applications, 
+                              by.x = "Name", by.y = "rabbit_name", all.x = TRUE ,all.y = TRUE)
+all.rabbits.all.applications
+
+
+
+```
+
+
+
+### Aggregation
+
+I've already shown above how you can aggregate vectors and data frame columns using functions like "mean()", "median()", and "sum()". These aggregate the entire contents of a vector, but you might also want to aggregate by categories provided in another column of a data frame. You can do this using the "aggregate()" function   
+
+```{r}
+
+#Notice that every parameter is a vector (data frame column)
+#The categories are contained within a list - 
+#this is like a vector but it contains other objects.
+#FUN can be assigned to any function, including mean(), median(), sum(), count()
+#Note also that there is another syntax for aggregate that is found in the help entry.
+#It will give you similar results but assign different headers - try it out.
+mean.weight.by.sex <- aggregate(rabbits$Weight, 
+                                by = list(rabbits$Sex),
+                                FUN = "mean")
+
+mean.weight.by.sex
+
+
+#This aggregates by both Sex and EarType, so the list contains those two vectors (columns).
+median.weight.by.sex.eartype <- aggregate(rabbits$Weight,
+                                by = list(rabbits$Sex, rabbits$EarType),
+                                FUN = "median")
+
+median.weight.by.sex.eartype
+
+
+#This counts the rows by Sex and EarType. Length says how many rows are in each group.
+count.by.sex.eartype <- aggregate(rabbits$Weight,
+                                by = list(rabbits$Sex, rabbits$EarType),
+                                FUN = "length")
+
+count.by.sex.eartype 
+
+
+
+#Notice that these data frames have column names that we probably don't want,
+#so you should rename them.
+
+colnames(mean.weight.by.sex) <- c("Sex", "Mean_Weight")
+
+colnames(median.weight.by.sex.eartype) <-  c("Sex", "EarType", "Median_Weight")
+
+#You can also specify column names of the group columns using aggregation
+#But you still need to name the aggregate column using colnames, giving the index
+#of the final column
+
+
+median.weight.by.sex.eartype <- aggregate(rabbits$Weight,
+                                by = list(Sex = rabbits$Sex, EarType = rabbits$EarType),
+                                FUN = "median")
+colnames(median.weight.by.sex.eartype)[3] <- "Median_Weight"
+
+median.weight.by.sex.eartype
+
+
+#Or if you are feeling fancy you can calculate the index last column, 
+#because we know that the index
+#of the last column equals the length of the column names vector.
+
+colnames(median.weight.by.sex.eartype)[length(colnames)] <- "Median_Weight"
+
+
+
+```
+
+
+
+
+## Packages and Functions
+
+### CRAN Packages
+
+In R, **packages** contain a set of **functions** beyond what comes with Base R. This large set of functions available in packages is one of the strengths of R. It means that you don't have to reinvent the wheel. These packages come from a variety of sources. Some are so essential that they may have come with your installation of R. Others can be loaded from the official repository of R packages called CRAN. You can generally count on these to work well, because they have been vetted by the R community.  You can also install custom packages that you find on websites like github or gitlab. When installing these you should make sure that you know what you are installing, because these have not been vetted.
+
+First I'll look at installing and loading packages from CRAN. You must first install the package using **install.packages()** (or the menu) and then load it using **library()** or the Packages menu on the bottom right pane in Rstudio. If you want to update a package with the latest version, you just install it again.  If you want to update all (or a number of) your CRAN packages, you can use **update.packages()**.  This is generally not necessary to do this too often, because established packages do not change much over time.
+
+So for instance, for the package "xlsx", you would install and load it like this (including packages it depends upon):
+
+install.packages("xlsx")
+
+library(xlsx)
+
+Once you load a package you can run functions with just their name, but you can also omit the library() call and use functions by first listing the package "::" and then the function. R contains a built in help system.  You can look at the "Help" tab in Rstudio, or use console commands with **?** if you know the function you want and **??** if you want to search for a function using key words.
+
+**xlsx** allows us to read and write excel files. Rstudio has a built in data import tool that you can find in the Environment tab, but you can only write data out by way of the terminal using scripts. 
+
+```{r, eval = FALSE}
+
+# ? provides the help page for the particular function in the package.
+# ?`xlsx-package` for package information
+# When looking for help files it is usually easiest to use the full notation, with a colon. 
+#?xlsx::xlsx
+
+xlsx::write.xlsx(x = all.rabbits.all.applications, 
+                 file = "rabbit_applications.xlsx",
+                 col.names = TRUE,
+                 row.names = FALSE, 
+                 showNA = FALSE)
+
+#You could do the same command with first calling the library() function
+
+library(xlsx)
+write.xlsx(x = all.rabbits.all.applications, 
+                 file = "rabbit_applications.xlsx",
+                 col.names = TRUE,
+                 row.names = FALSE, 
+                 showNA = FALSE)
+
+
+
+
+
+```
+
+
+
+If you only give the file name for output, rather than the full extension, it is put into your "working directory."  This is, to put it simply, where R is working. All reading and writing will take place in this directory if a full extension hasn't been provided. You can use the R-studio commands under the "Files" -> "More" tabs to interact with this, or use console/script commands. You can also create new folders in the "File" tab in R-studio.
+
+```{r}
+
+#Output the current working directory
+getwd()
+
+#Change the current working directory "~" means your documents folder
+setwd("~/R-Tutorial/Homework")
+
+#And change it back
+setwd("~/R-Tutorial")
+getwd()
+
+```
+
+
+
+
+
+
+
+### Functions
+
+You will get most of the functions you use in R from packages from CRAN. But it is easy to write your own custom functions, and you can also install custom functions that others have written. More on that later.  Consider the function below that computes standard error, which is missing from the standard set of base R stats functions.
+
+
+
+```{r}
+
+#Little function to compute standard error. "x" here is the parameter.
+#The results of the "return" function is what is returned by the function.
+st.err <- function(x){
+  return(sd(x)/sqrt(length(x)))
+}
+
+# Create a vector of values to use with the function
+nums <- c(4, 3, 5, 7, 3, 9, 2, 7)
+
+# After loading the function (putting the function in a variable) you can call the function just like others. 
+# Note that like other functions the parameter name does not need to match what you named it in "function" above.
+se <- st.err(nums)
+mean <- mean(nums)
+sd <- sd(nums)
+
+# You can use more functions to customize the output.
+paste("mean:", round(mean, 2))
+paste("standard deviation:", round(sd, 2))
+paste("standard error:", round(se, 2))
+
+
+
+```
+
+
+The standard error function above is very simple, with only one parameter. But just like the functions from CRAN, homemade functions can be more complex. Consider the following function, which is actually a version of a function found in a custom package at https://git.doit.wisc.edu/lsaim/AIMutils. A lot is going on here. This takes as input a UW-Madison semester-year term code from one of two student information systems (SIS and DARS) and outputs the academic year of the term. 
+
+```{r}
+
+acad.year <- function(Term, TermType = "SIS"){
+  Data <- data.frame(Term, stringsAsFactors = FALSE)
+
+  if(TermType == "SIS"){
+    Data$cent <- substr(Data$Term, 1, 1)
+    Data$year <- substr(Data$Term, 2, 3)
+    Data$semester <- substr(Data$Term, 4, 4)
+
+    if (length(Data[which(Data$cent == "0"),]$cent) > 0)
+      {Data[which(Data$cent == "0"),]$cent <- "19"}
+    if (length(Data[which(Data$cent == "1"),]$cent) > 0)
+      {Data[which(Data$cent == "1"),]$cent <- "20"}
+    Data$acadYear <- paste(Data$cent, Data$year, sep = "")
+    if (length(Data[which(Data$semester == "6"),]$cent) > 0)
+      {Data[which(Data$semester == "6"),]$acadYear <- as.integer(Data[which(Data$semester == "6"),]$acadYear) + 1}
+
+  }
+  if(TermType == "DARS"){
+    Data$acadYear <- substr(Data$Term, 1, 4)
+    Data$semester <- substr(Data$Term, 5, 5)
+    if (length(Data[which(Data$semester == "3"),]$semester) > 0)
+      {Data[which(Data$semester == "3"),]$acadYear <- as.integer(Data[which(Data$semester == "3"),]$acadYear) + 1}
+
+  }
+
+  return(Data$acadYear)
+
+
+}
+
+#These vectors contain identical terms in the two formats
+terms.sis <- c("1224", "1212", "1156", "0992", "1052")
+terms.dars <- c("20222", "20211", "20153", "19991", "20051")
+
+#Because SIS is the default, you can either provide that parameter or not if that is the input.
+acad.year.sis <- acad.year(terms.sis)
+acad.year.sis
+acad.year.sis <- acad.year(terms.sis, "SIS")
+acad.year.sis
+
+#If you use DARS terms, you must provide the TermType parameter
+acad.year.dars <- acad.year(terms.dars, "DARS")
+acad.year.dars
+
+#If you call parameters out of order (or are skipping some) you need to provide the parameter name 
+#with a single "=" to assign the value.
+acad.year.dars <- acad.year(TermType = "DARS", Term = terms.dars)
+acad.year.dars
+
+
+
+```
+
+### Frequently Used Functions
+
+Although you can make your own functions, you will most often use functions from CRAN. If you use R a bit you will compile your own list of functions that you find useful - the internet is a good place to find them - but here is a list of useful functions to get you started. Some of these I've already presented, but others are new and I'll describe them further in this section. Note that for now I won't mention the "tidyverse" functions. I'll present this set of functions in its own section, because they constitute a pretty dramatic change in how you use R.
+
+  - merge(x, y, by): merge data frame x with y, by a set of columns.
+  - aggregate(x, by, FUN): aggregate values in column x by a set of columns using a particular function (FUN).
+  - which(condition): returns the indexes of the rows in the column meeting a condition.
+  - colnames(df): the columns in a data frame. Can be used to display or change.
+  - $: access a column by name.
+  - seq(from, to, by): a sequence of numbers from a number to another and by an increment.
+  - x:y : a sequence of integers from x to y 
+  - "[rows,columns]": subset
+  - write.xlsx(df, file): write data frame to excel file
+  - read_excel(df, file): read an excel file
+  - read.csv(file): read a csv file
+  - write.csv(df, file): write data frame to csv
+  - rbind(x, y): bind two data frames x and y, by their rows. They must have the same columns. 
+  - cbind(x, y): bind two data frames x and y, by their columns. They must have the same number of rows and be in the same order.
+  - table(column1, column2, column3): create a count table with up to three dimensions
+  - prop.table(table, margin): provides proportion of counts, based upon the margin 
+  - summary(): provides summary information for all columns in data frame
+  - substr(string, first, last): substring of provided string, with a given first and last letter index
+  - str_trim(string, side): trim a string on the provided side
+  - paste(string, string, sep): combines two strings in order with a certain separator
+  - is.na(column): provides a TRUE/FALSE vector for whether the cell is NA
+  - NROW(df): provides the number of rows in a data frame
+  - length(vector): provides the length of a vector
+  - unique(df): provide the unique rows of a data frame (or vector)
+  
+
+
+
+```{r}
+
+#Here is the rabbits data frame along with some extra data frames.
+rabbits
+more.rabbits <- data.frame(Name = c("Willy", "Dotty", "Rabbit"), 
+                           EarType = c("lop", "up", "up"),
+                           Sex = c("M", "F", "M"), 
+                           BondPartner = c("Dotty", "Willy", NA),
+                           Weight = c(2.2, 5.3, 3.1),
+                           Length = c(9, 18, 12), 
+                           Age = c(4, 5, 2))
+more.rabbits$BMI <-  more.rabbits$Weight/(more.rabbits$Length^2) * 703
+
+more.rabbits$BMI_category <- NA
+more.rabbits[which(more.rabbits$BMI < 15),]$BMI_category <-"Underweight"
+more.rabbits[which(more.rabbits$BMI >= 15 & more.rabbits$BMI < 25),]$BMI_category <-"Healthy Weight"
+#more.rabbits[which(more.rabbits$BMI >= 25 & more.rabbits$BMI < 32),]$BMI_category <-"Overweight"
+#more.rabbits[which(more.rabbits$BMI >= 32),]$BMI_category <-"Very Overweight"
+
+#Notice that I am including entries for the more.rabbits rows.
+rabbits.extra.columns <- data.frame(Vaccinated = c(FALSE, TRUE, TRUE, FALSE, TRUE, TRUE,
+                                                   TRUE, FALSE, TRUE, TRUE, TRUE, TRUE,
+                                                   TRUE, TRUE,  TRUE, TRUE, TRUE, TRUE,
+                                                   TRUE, FALSE), 
+                                    Date_Entered = as.Date(c("2022-06-24","2022-06-24","2022-06-24",
+                                                             "2022-06-24", "2022-06-24","2022-06-24",
+                                                              "2022-06-24", "2022-06-24","2022-06-24",
+                                                              "2022-06-24", "2022-06-24","2022-06-24",
+                                                              "2022-06-24", "2022-06-24","2022-06-24",
+                                                              "2022-06-24", "2022-06-24","2022-07-25",
+                                                              "2022-07-25", "2022-07-25" )))
+
+
+
+#Add rows
+rabbits <- rbind(rabbits, more.rabbits)
+rabbits
+
+#Add columns
+rabbits <- cbind(rabbits, rabbits.extra.columns)
+rabbits
+
+#Table counting EarType and Sex
+table(rabbits$EarType, rabbits$Sex)
+
+
+#proportions of the entire table
+prop.table(table(rabbits$EarType, rabbits$Sex))
+#proportions of the rows
+prop.table(table(rabbits$EarType, rabbits$Sex), margin = 1)
+#proportions of the columns
+prop.table(table(rabbits$EarType, rabbits$Sex), margin = 2)
+
+#summary information for all columns in data frame
+summary(rabbits)
+
+#Abbreviate the ear type, going from space 1 to space 1.
+EarType.abv <- substr(rabbits$EarType, 1, 1)
+EarType.abv
+
+#Adding trailing spaces to the Name for an example
+#Here I add a fixed string using paste with no seperation
+rabbits$Name <- paste(rabbits$Name, "  ", sep = "")
+rabbits$Name
+#Trim the trailing spaces (right side)
+rabbits$Name <-  stringr::str_trim(rabbits$Name, side = "right")
+
+#Only subset the rows with an unbonded rabbit (NA for BondPartner).
+rabbits.not.bonded <- rabbits[which(is.na(rabbits$BondPartner)),]
+rabbits.not.bonded
+
+#Number of rows in the data frame
+NROW(rabbits)
+
+#Length of a vector
+length(rabbits$Name)
+
+#Unique values in a column. 
+#Can also be used to output unique rows in a data frame
+unique(rabbits$Sex)
+```
+
+

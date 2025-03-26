@@ -1,0 +1,1314 @@
+---
+title: "R for Office Drones"
+author: "Michael J Zenz"
+format: html
+toc: true
+toc-depth: 3
+---
+
+<!-- ::: {.panel-tabset} -->
+## Basics
+
+### Introduction
+
+R is a statistical and data programming language that also is useful for processing data and preparing reports.
+You perform operations by inputting text commands into a console.
+This text-based system provides a record of all commands performed, which makes it easy to revise a data process at any point.
+
+You can save text commands to text files called **scripts**.
+When run, these scripts are processed from top to bottom.
+You can also run particular lines or chunks of code at a time.
+Scripts are just regular text files saved with the file extension .R.
+Alternatively, you can run commands that you type directly into the R console.
+But by doing this you won't keep a record of what you have run, and so it is bad form.
+Almost all of your work with R will be done in scripts.
+
+Most operations are performed through the use of various **functions**, which simplify complex operations into a single line of text.
+A number of functions come built into R (**Base-R**), but you can expand the set of functions available to you by installing various **packages**.
+More on this in a later section.
+
+In this section, I will describe a number of Base-R functions (along with a few functions outside of Base that are vital).
+Most of these are foundational to the language, and so are important to understand before moving on to other functions that make using R easier.  Note that in later sections I will show you how to use a different style of R code that is possible with the **tidyverse** set of packages, maintained by the same company that makes the R-Studio program. Some people skip right to this way of coding, but I think it misses something important about how R works. Anyway, that's my view of it! 
+
+### Installation
+
+Although R itself is a command-line program, it is easier to use with a graphical interface. This allows you to see the R command-line, scripts, plots, files, and R objects all in one place.  The most popular graphical interface for R is **R Studio**.  
+
+First install the [R programming language](https://cran.r-project.org/bin/windows/base/), and then the [R-studio](https://posit.co/download/rstudio-desktop/) graphical interface.  Accept all defaults during the installation. Once you have completed the installation, open R-studio to get started. It should find your installation of R automatically.
+
+
+### Variables
+
+You assign values to variables in memory using the **\<-** operator.
+
+```{r}
+# This assigns 4.3 to the variable x
+x <- 4.3
+
+```
+
+In the example above you can think of 4.3 as being put into a variable called *x*.
+Any line with a **\#** in front of it is interpreted by R as a **comment**, and so is ignored by it when it runs.
+Lines can continue by using a carriage return, as long as an operator is included just before the return.
+This will help you to keep code from sprawling.
+
+You can see what is in x by just typing those variables into the terminal (or using R-studio's Environment feature at the top right pane to look at them).
+
+```{r}
+x
+
+```
+
+### Data Types
+
+The **output** of the R command "x" can be seen in the box below that command ("\## \[1\] 4.3").
+"\##" in this introduction just indicates that this is R output printed here - you won't see that part in your R terminal.
+You will just see "\[1\]", which is the item index (more on that later), and the value in the variable "4.3".
+
+R will assign a **variable type** when you assign a value to a variable.
+You can always write over a variable with new values.
+Here are a few types.
+There are more types that I will introduce later, because they are a bit more complex.
+
+```{r}
+# number
+y <- 3
+
+# character string
+z <- "Wisconsin"
+i <- "Texas"
+
+# logical
+tf.a <- TRUE
+tf.b <- FALSE
+
+# date - these are like character strings, but allow for useful functions for dates
+date1 <- as.Date("2020-06-23")
+weekdays(date1)
+
+
+# factor - these are like character strings, but only allow for a set of levels as values. 
+#         They will be more useful when they are vectors, described below.
+factor1 <- factor("Wisconsin", levels = c("California", "Idaho", 
+                                          "New York", "Wisconsin"))
+
+
+
+
+```
+
+### Operators
+
+Along with data types there are mathematical and logical operators.
+For the expected outputs of logical operators see their [truth tables](https://sites.millersville.edu/bikenaga/math-proof/truth-tables/truth-tables.html).
+
+```{r}
+
+# Mathematical Operators output numerical values
+1+1
+x+y
+x/y
+x^2
+x^y
+# Square root requires a function rather than an operator
+sqrt(x)
+
+
+# These can be output to variables too.
+z <- x*y
+z
+
+# Logical Operators output logical values, 
+#some use mathematical inputs...
+
+# is greater than
+x > y
+# is less than
+x < y
+# is equal to, notice that you use == for logical equals
+x == y
+# is not equal to
+x != y
+
+# these can also be output to variables
+tf.c <- x > y
+tf.c
+
+# others use logical inputs...
+
+# logical "and"
+TRUE & TRUE
+TRUE & FALSE
+FALSE & FALSE
+tf.a & tf.c
+
+# logical "or" (inclusive)
+TRUE | TRUE
+TRUE | FALSE
+FALSE | FALSE
+tf.a | tf.c
+
+# logical "not"
+!TRUE
+!FALSE
+!(tf.a & tf.c)
+
+# equal and not equal, can be used with 
+#any data type to determine if the two values are equal.
+TRUE == FALSE
+"Wisconsin" == "Texas"
+"Wisconsin" == "Wisconsin"
+"Wisconsin" != "Texas"
+
+```
+
+### Vectors
+
+You can also construct sets of values called **vectors**.
+A vector in programming (distinct from its use in math or physics) is a one-dimensional array of values (examples below).
+One way to create a vector is with the combine function, **c()**.
+This provides a chance to "call" (use) a **function**.
+Functions are called using their name ("c" in this case) and the parentheses containing **parameters**.
+Parameters contain the information the function needs to do what it is meant to do.
+Some functions will have lots of different types of information they need to operate, whereas others will need only one piece of information (or even none).
+Functions can also be set up with various default parameters, which can be omitted when it is called if you want to keep those defaults.
+Some functions like "\[\]" and ":" don't use this format, but those are special and rare.
+
+Below I create several vectors.
+Notice that they can be created out of any type of data and even existing variables.
+The variable is shown right after the code for creating it.
+
+```{r}
+#A number vector inputting all values
+vnum1 <- c(5, 10, 56, 9, 11)
+vnum1
+
+# A number vector where some values are already stored in variables
+vnum2 <- c(x, y, 8 )
+vnum2
+
+# A number vector that is a combination of two existing vectors
+vnum3 <- c(vnum1,vnum2)
+vnum3
+
+# A character vector
+vchar1 <- c(z, i, "Maryland", "California")
+vchar1
+
+# A logical vector
+vlogic1 <- c(TRUE, TRUE, FALSE, tf.a, tf.b)
+vlogic1
+
+# Vectors can only contain the same data type, 
+#so mixed vectors will be converted to characters, which is the most inclusive type.
+vlogic.mixed1 <- c(vnum3, vchar1, vlogic1)
+vlogic.mixed1
+```
+
+There are a number of ways to create a vector without naming each item.
+A couple of commonly used methods are the "**:**" and the **seq()** functions, which produce **sequences** of numbers.
+In seq() "from", "to", and "by" are all parameters.
+Unlike for variables, you use the **=** to assign values to them instead of the "\<-".
+
+```{r}
+
+# A sequence of numbers from 2 to 18
+sq1 <- 2:18
+sq1
+
+# A sequence of numbers from 2 to 18 by 2s
+sq2 <- seq(from = 2, to = 18, by  = 2)
+sq2
+
+```
+
+You can specify the location in a vector by using an **index**.
+This also allows you to **subset** with the "\[\]" function.
+At this point you should also realize that the "\[1\]" you see at the beginning of all R output is the index at that point in the vector.
+With each new row of output, R will tell you the first index in that row by using the "\[\]".
+There are a variety of ways to subset using these indexes.
+
+```{r}
+
+# The 3rd number in the vnum1 vector
+subsetnum1 <- vnum1[3]
+subsetnum1
+
+
+# The 2nd through 5th index in vnum3
+
+subsetnum2 <- vnum3[2:5]
+subsetnum2
+
+# Using the sequence saved above, 
+#the 2nd through 18th items, by 2s of vlogic.mixed1
+
+subsetmixed1 <- vlogic.mixed1[sq2]
+subsetmixed1
+
+```
+
+Once you can use vectors, you can start describing those vectors using a number of important functions.
+There is also the "**%in%**" operator that returns true if the value on the left is in the vector on the right.
+
+```{r}
+# vnum3
+vnum3
+# mean of vnum3
+mean(vnum3)
+
+# median of vnum3
+median(vnum3)
+
+# number of items in vnum3
+length(vnum3)
+
+# in the vector
+
+10 %in% vnum3
+
+
+
+```
+
+Operations and functions can also be applied to vectors much like they are to values.
+When vectors of the same size are used in an operation, the operation applies to each index in the vectors in turn and the results are in a new vector.
+For instance if one vector is added to another, the first index of the first vector is added to the first index in the second vector and so on.
+When one *value* is involved in an operation with a vector that value is used with all indexes of the vector.
+When two vectors of different size are involved in an operation, the result is more complex.
+So you should avoid this unless you know what you are doing.
+
+```{r}
+# Single number operation
+vnum4 <- vnum3 * 2
+vnum4
+
+# Operation between two vectors
+vnum3 + vnum4
+
+
+# Operations can be complex as well and can utilize as many vectors as needed
+vnum5 <- vnum4 - (vnum3 + 10)
+vnum5
+
+
+#Logical vectors also work in the same way
+
+vnum5 > vnum4
+
+```
+
+It is a bit obscure at this point why operations between vectors are so important, but this will serve the basis of creating new data columns using two (or more) existing columns.
+
+## Data
+
+### Matrices and Data Frames
+
+Whereas a vector is a single dimensional set of values, a **matrix** is multidimensional.
+Like vectors, matrices can only contain values of the same type.
+They are primarily mathematical objects that probably won't be of great use to you.
+However, they are similar enough to data frames, which are the primary multi-dimensional data structures in R, so I will spend some time introducing them.
+In particular, the process of subsetting matrices is instructive for subsetting data frames.
+
+```{r}
+
+# Create a matrix by providing a vector and the number of rows and/or columns (ncol).
+
+matrix1 <- matrix(sq2, ncol = 3)
+matrix1
+
+
+```
+
+The column and row labels for this matrix should be familiar to you as the subset brackets ("\[\]").
+However, now they also contain a comma: for rows it is just after the index and for columns it is just before the index.
+This is how two dimensional indexes are specified in R, and it will be very important for understanding how this is used to subset data.
+
+Let's begin exploring how you subset two dimensional data in R by extracting cells from this matrix.
+
+```{r}
+# value in the 2nd row and 1st column
+matrix1[2,1]
+
+# all values in the 2nd row
+matrix1[2,]
+
+#all values in the 1st column
+matrix1[,1]
+
+#all values in the 2nd and 3rd columns
+matrix1[,c(2,3)]
+
+```
+
+Notice that the last subset produces another matrix rather than just a vector, because there are still two columns - it is still two-dimensional.
+
+**Data frames** are also two-dimensional data but they have a number of additional features that make them the primary data structures in R.
+Most importantly, they allow for columns of different data types and descriptive names.
+A data frame requires that a set of equally long vectors be bound, such that each vector forms a column.
+Later I'll be introducing some example data frames that come with R, but they can also be made out of vectors using the data.frame() function.
+
+```{r}
+
+
+# Each column in a data frame is a vector
+rabbit_names <- c("Ruthie", "Smokey", "Bug", "Wicket", "Wesley", 
+                  "Heather", "Ava", "Cinnabun", "Oliver" , "Chestnut", 
+                  "Daisy", "Cadbury", "Chickpea", "Storm", "Mr. Fuzzy Foot", 
+                  "Bouncer", "Midnight")
+
+rabbit_ears <- c( "lop", "up" , "up", "up", "up", "lop", "up", 
+                  "up", "lop", "up", "up", "up", "up", "up", "up", "up", "up")
+
+rabbit_sex <- c("F","F" ,"M", "M", "M", "F", "F", "M", "M", 
+                "F", "F", "F", "F", "M", "M", "M", "F")
+
+rabbit_partner <- c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 
+                    "Chickpea", "Cadbury", NA, "Bouncer", 
+                    "Mr. Fuzzy Foot", NA)
+
+rabbit_weight_lbs <- c(3.5, 5.8 ,2.5 , 2.6, 3.2, 4.2,3.9, 2.7, 
+                       3.3, 4.5, 2.9, 6, 5.9, 4.9, 3.9, 4, 4.3)
+rabbit_length_inch <- c(10, 17, 8, 7.5, 9, 14, 12, 8, 10, 13, 8.5, 
+                        18, 19, 14, 12, 12, 14)
+rabbit_age_years <- c(2,  5, 1.5, .5,.8, 2,3, 1.3,.7,2, 2.5, 3, 3,
+                      1.5, 1, 1, 2.5)
+
+# You can use the data.frame() function to create a data frame out of vectors.
+# Each vector (right) is assigned to a column name (left) using the "=".
+rabbits <- data.frame(rabbit_name = rabbit_names, ear_type = rabbit_ears, 
+                      sex = rabbit_sex,
+                      partner = rabbit_partner, weight_lbs = rabbit_weight_lbs, 
+                      length_inches = rabbit_length_inch, age = rabbit_age_years)
+
+# Data frame can be output to the terminal or viewed in Environment.
+rabbits
+
+# You can see the structure of the data frame with the str() function.
+str(rabbits)
+
+```
+
+Column names can be used to retrieve a column (a vector) by using the "**\$**" function.
+New columns can also be created, and column values can be changed this way.
+I make a silly BMI metric for rabbits.
+
+```{r}
+
+# "$" extracts one column just like [] can
+rabbits$rabbit_names
+
+# Calculating a new column from values in other columns.
+# This follows the same rules as vector multiplication
+rabbits$BMI <- rabbits$weight_lbs/(rabbits$length_inches^2) * 703
+
+rabbits$BMI
+
+```
+
+A data frame can be **subset** much like a matrix using indexes, but there are also more convenient ways of subsetting.
+For instance, you can select columns by **column name** instead of index.
+You can also subset rows using a **logical condition**.
+Finally, you can recode columns, either by creating a new column or changing an existing column, by selecting a subset of the data frame to change.
+
+```{r}
+
+# Data frames have column names that you can access using the function colnames()
+# the column names are just an ordered vector of character strings.
+
+colnames(rabbits)
+
+# You can also alter colnames using the same function.
+colnames(rabbits) <- c("Name", "EarType", "Sex", "BondPartner", 
+                       "Weight", "Length", "Age", "BMI")
+
+# You can provide [] a vector of character strings to subset those columns.
+
+rabbits.sex <- rabbits[,c("Name", "Sex")]
+rabbits.sex
+
+# To subset rows by condition, you can use the which() function. It outputs the indexes 
+# of rows satisfying the condition. The logical condition can be as complex as necessary.
+
+rabbits.female <- rabbits[which(rabbits$Sex == "F"),]
+# this only contains female rabbits
+rabbits.female
+
+# You can also subset columns and rows at the same time.
+ rabbits.sex.female <- rabbits[which(rabbits$Sex == "F"),c("Name", "Sex")]
+ 
+# Let's look a bit closer at what each part of the row subset outputs.
+# The logical conditional outputs a logical vector 
+#   that corresponds to which rows match the condition.
+rabbits$Sex == "F"
+
+# The which() function takes that vector as input and outputs the indexes that are TRUE
+which(rabbits$Sex == "F")
+
+# Remember that the [] takes indexes as inputs and so outputs the rows 
+#that match the condition.
+rabbits[which(rabbits$Sex == "F"),]
+  
+
+# Create a new variable that makes weight categorical.
+##You need to create the column first with NA data, 
+##because otherwise you will only create the variable for a subset of rows.
+##That would create an error.
+##Notice that this is coded in a way that is very clear but more complex than needed.
+rabbits$BMI_category <- NA
+rabbits[which(rabbits$BMI < 15),]$BMI_category <-"Underweight"
+rabbits[which(rabbits$BMI >= 15 & rabbits$BMI < 25),]$BMI_category <-"Healthy Weight"
+rabbits[which(rabbits$BMI >= 25 & rabbits$BMI < 32),]$BMI_category <-"Overweight"
+rabbits[which(rabbits$BMI >= 32),]$BMI_category <-"Very Overweight"
+
+
+
+
+```
+
+### Merging
+
+Two data frames can be **merged** on a set of common columns using the "merge()" function.
+This is similar to a "join" in sql.
+The default behavior of merge() is to retain only those rows that match on the specified columns.
+You can user the all.x and all.y parameters to retain all rows from the first data frame, all rows from the second data frame, or all rows from both data frames.
+
+```{r}
+# Here is a compliment data frame to the rabbits data frame. 
+adoption.applications <- data.frame(applicants = c("John Smith", "Jane Goodwin", 
+                                                   "Katie Walker",  "Katie Walker", 
+                                                   "Fred Flinstone", "Liz Cooper",
+                                                   "Liz Cooper",  "Liz Cooper",
+                                                   "Dylan Strong", "Amy Cohen"), 
+                                    rabbit_name= c("Oliver", "Oliver", "Cadbury", 
+                                                   "Chickpea", "Cinnabun", "Storm", 
+                                                   "Ruthie", "Wicket", "", ""), 
+                                    OtherPets = c(TRUE, FALSE, FALSE, FALSE, FALSE,
+                                                  TRUE, TRUE, TRUE, FALSE, TRUE), 
+                                    Children = c(FALSE, TRUE, FALSE, FALSE, FALSE, 
+                                                 FALSE, FALSE, FALSE, TRUE, TRUE))
+
+
+# Notice that adoption.applications shares a column with the rabbits data frame.
+
+# This keeps only rows that match
+rabbits.applications <- merge(x = rabbits, y = adoption.applications, 
+                              by.x = "Name", by.y = "rabbit_name")
+
+rabbits.applications
+
+# This keeps all rows in rabbits ("left join")
+all.rabbits.applications <- merge(x = rabbits, y = adoption.applications, 
+                              by.x = "Name", by.y = "rabbit_name", all.x = TRUE)
+
+all.rabbits.applications
+
+# This keeps all rows in adoption.applications ("right join")
+rabbits.all.applications <- merge(x = rabbits, y = adoption.applications, 
+                              by.x = "Name", by.y = "rabbit_name", all.y = TRUE)
+rabbits.all.applications
+
+
+# This keeps all rows from both tables ("full outer join")
+all.rabbits.all.applications <- merge(x = rabbits, y = adoption.applications, 
+              by.x = "Name", by.y = "rabbit_name", all.x = TRUE ,all.y = TRUE)
+all.rabbits.all.applications
+
+
+
+```
+
+### Aggregation
+
+I've already shown above how you can aggregate vectors and data frame columns using functions like "mean()", "median()", and "sum()".
+These aggregate the entire contents of a vector, but you might also want to aggregate by categories provided in another column of a data frame.
+You can do this using the "aggregate()" function
+
+```{r}
+
+# Notice that every parameter is a vector (data frame column)
+##The categories are contained within a list - 
+##this is like a vector but it contains other objects.
+##FUN can be assigned to any function, including mean(), median(), sum(), count()
+##Note also that there is another syntax for aggregate that is found in the help entry.
+##It will give you similar results but assign different headers - try it out.
+mean.weight.by.sex <- aggregate(rabbits$Weight, 
+                                by = list(rabbits$Sex),
+                                FUN = "mean")
+
+mean.weight.by.sex
+
+
+# This aggregates by both Sex and EarType, 
+#so the list contains those two vectors (columns).
+median.weight.by.sex.eartype <- aggregate(rabbits$Weight,
+                                by = list(rabbits$Sex, rabbits$EarType),
+                                FUN = "median")
+
+median.weight.by.sex.eartype
+
+
+# This counts the rows by Sex and EarType. Length says how many rows are in each group.
+count.by.sex.eartype <- aggregate(rabbits$Weight,
+                                by = list(rabbits$Sex, rabbits$EarType),
+                                FUN = "length")
+
+count.by.sex.eartype 
+
+
+
+# Notice that these data frames have column names that we probably don't want,
+##so you should rename them.
+
+colnames(mean.weight.by.sex) <- c("Sex", "Mean_Weight")
+
+colnames(median.weight.by.sex.eartype) <-  c("Sex", "EarType", "Median_Weight")
+
+# You can also specify column names of the group columns using aggregation
+##But you still need to name the aggregate column using colnames, giving the index
+##of the final column
+
+
+median.weight.by.sex.eartype <- aggregate(rabbits$Weight,
+                                by = list(Sex = rabbits$Sex, EarType = rabbits$EarType),
+                                FUN = "median")
+colnames(median.weight.by.sex.eartype)[3] <- "Median_Weight"
+
+median.weight.by.sex.eartype
+
+
+#Or if you are feeling fancy you can calculate the index last column, 
+##because we know that the index
+##of the last column equals the length of the column names vector.
+##Given what you know about subset, why does this work?
+
+colnames(median.weight.by.sex.eartype)[length(colnames)] <- "Median_Weight"
+
+
+
+```
+
+## Packages and Functions
+
+### CRAN Packages
+
+In R, **packages** contain a set of **functions** beyond what comes with Base R. This large set of functions available in packages is one of the strengths of R.
+It means that you don't have to reinvent the wheel.
+These packages come from a variety of sources.
+Some are so essential that they may have come with your installation of R.
+Others can be loaded from the official repository of R packages called CRAN.
+You can generally count on these to work well, because they have been vetted by the R community.
+You can also install custom packages that you find on websites like github or gitlab.
+When installing these you should make sure that you know what you are installing, because these have not been vetted by the R community.
+
+First I'll look at installing and loading packages from CRAN.
+You must first install the package using **install.packages()** (or the menu) and then load it using **library()** or the Packages menu on the bottom right pane in Rstudio.
+If you want to update a package with the latest version, you just install it again.
+If you want to update all (or a number of) your CRAN packages, you can use **update.packages()**.
+This is generally not necessary to do this too often, because established packages do not change much over time.
+
+So for instance, for the package "openxlsx", you would install and load it like this (including packages it depends upon):
+
+```{r, eval = FALSE}
+install.packages("openxlsx")
+
+library(openxlsx)
+
+```
+
+Once you load a package you can run functions with just their name, but you can also omit the library() call and use functions by first listing the package, "::", and then the function name.
+R contains a built in help system.
+You can look at the "Help" tab in Rstudio, or use console commands with **?** if you know the function you want and **??** if you want to search for a function using key words.
+
+**openxlsx** allows us to read and write excel files.
+Rstudio has a built in data import tool that you can find in the Environment tab, but you can only write data out by way of the terminal using scripts.
+
+```{r, eval = FALSE}
+
+# ? provides the help page for the particular function in the package.
+# When looking for help files it is usually easiest to use the full notation,
+#with a colon. 
+#?openxlsx::write.xlsx
+
+xlsx::write.xlsx(x = all.rabbits.all.applications, 
+                 file = "rabbit_applications.xlsx")
+
+#You could do the same command with first calling the library() function
+
+library(xlsx)
+write.xlsx(x = all.rabbits.all.applications, 
+                 file = "rabbit_applications.xlsx")
+
+
+
+
+```
+
+If you only give the file name for output, rather than the full extension, it is put into your "working directory." This is, to put it simply, where R is working.
+All reading and writing will take place in this directory if a full extension hasn't been provided.
+You can use the R-studio commands under the "Files" -\> "More" tabs to interact with this, or use console/script commands.
+You can also create new folders in the "File" tab in R-studio.
+
+```{r}
+
+#Output the current working directory
+getwd()
+
+#Change the current working directory "~" means your documents folder
+setwd("~/R-Tutorial/Homework")
+
+#And change it back
+setwd("~/R-Tutorial")
+getwd()
+
+```
+
+### Functions
+
+You will get most of the functions you use in R from packages from CRAN.
+But it is easy to write your own custom functions, and you can also install custom functions that others have written.
+Consider the function below that computes standard error, which is missing from the standard set of base R stats functions.
+
+```{r}
+
+#Little function to compute standard error. "x" here is the parameter.
+##The results of the "return" function is what is returned by the function.
+st.err <- function(x){
+  return(sd(x)/sqrt(length(x)))
+}
+
+# Create a vector of values to use with the function
+nums <- c(4, 3, 5, 7, 3, 9, 2, 7)
+
+# After loading the function (putting the function in a variable) 
+#you can call the function just like others. 
+# Note that like other functions the parameter name 
+#does not need to match what you named it in "function" above.
+se <- st.err(nums)
+mean <- mean(nums)
+sd <- sd(nums)
+
+# You can use more functions to customize the output.
+paste("mean:", round(mean, 2))
+paste("standard deviation:", round(sd, 2))
+paste("standard error:", round(se, 2))
+
+
+
+```
+
+The standard error function above is very simple, with only one parameter.
+But just like the functions from CRAN, homemade functions can be more complex.
+Consider the following function, which is actually a version of a function found in a custom package at https://git.doit.wisc.edu/lsaim/AIMutils that I will show how to install below.
+A lot is going on here.
+This takes as input a UW-Madison semester-year term code from one of two student information systems (SIS and DARS) and outputs the academic year of the term.
+
+```{r}
+
+acad.year <- function(Term, TermType = "SIS"){
+  Data <- data.frame(Term, stringsAsFactors = FALSE)
+
+  #if a SIS term.
+  if(TermType == "SIS"){
+    Data$cent <- substr(Data$Term, 1, 1)
+    Data$year <- substr(Data$Term, 2, 3)
+    Data$semester <- substr(Data$Term, 4, 4)
+
+    #century
+    if (length(Data[which(Data$cent == "0"),]$cent) > 0)
+      {Data[which(Data$cent == "0"),]$cent <- "19"}
+    if (length(Data[which(Data$cent == "1"),]$cent) > 0)
+      {Data[which(Data$cent == "1"),]$cent <- "20"}
+    Data$acadYear <- paste(Data$cent, Data$year, sep = "")
+    #for summer term it sets to next acad year from what is in SIS term
+    if (length(Data[which(Data$semester == "6"),]$cent) > 0)
+    {Data[which(Data$semester == "6"),]$acadYear <- as.integer(Data[
+        which(Data$semester == "6"),]$acadYear) + 1}
+
+  }
+  #if DARS term
+  if(TermType == "DARS"){
+    Data$acadYear <- substr(Data$Term, 1, 4)
+    Data$semester <- substr(Data$Term, 5, 5)
+     #for summer term it sets to next acad year from what is in DARS term
+    if (length(Data[which(Data$semester == "3"),]$semester) > 0)
+    {Data[which(Data$semester == "3"),]$acadYear <- as.integer(Data[
+        which(Data$semester == "3"),]$acadYear) + 1}
+
+  }
+
+  return(Data$acadYear)
+
+
+}
+
+#These vectors contain identical terms in the two formats
+terms.sis <- c("1224", "1212", "1156", "0992", "1052")
+terms.dars <- c("20222", "20211", "20153", "19991", "20051")
+
+#Because SIS is the default, you can either provide that parameter or 
+#not if that is the input.
+acad.year.sis <- acad.year(terms.sis)
+acad.year.sis
+acad.year.sis <- acad.year(terms.sis, "SIS")
+acad.year.sis
+
+#If you use DARS terms, you must provide the TermType parameter
+acad.year.dars <- acad.year(terms.dars, "DARS")
+acad.year.dars
+
+#If you call parameters out of order (or are skipping some) 
+#you need to provide the parameter name 
+#with a single "=" to assign the value.
+acad.year.dars <- acad.year(TermType = "DARS", Term = terms.dars)
+acad.year.dars
+
+
+
+```
+
+### Frequently Used Functions
+
+Although you can make your own functions, you will most often use functions from CRAN.
+If you use R a bit you will compile your own list of functions that you find useful - the internet is a good place to find them - but here is a list of useful functions to get you started.
+Some of these I've already presented, but others are new and I'll describe them further in this section.
+Note that for now I won't mention the "tidyverse" functions.
+I'll present this set of functions in its own section, because they constitute a pretty dramatic change in how you use R.
+
+-   merge(x, y, by): merge data frame x with y, by a set of columns.
+-   aggregate(x, by, FUN): aggregate values in column x by a set of columns using a particular function (FUN).
+-   which(condition): returns the indexes of the rows in the column meeting a condition.
+-   colnames(df): the columns in a data frame. Can be used to display or change.
+-   \$: access a column by name.
+-   seq(from, to, by): a sequence of numbers from a number to another and by an increment.
+-   x:y : a sequence of integers from x to y
+-   "\[rows,columns\]": subset
+-   write.xlsx(df, file): write data frame to excel file
+-   read_excel(df, file): read an excel file
+-   read.csv(file): read a csv file
+-   write.csv(df, file): write data frame to csv
+-   rbind(x, y): bind two data frames x and y, by their rows. They must have the same columns.
+-   cbind(x, y): bind two data frames x and y, by their columns. They must have the same number of rows and be in the same order.
+-   table(column1, column2, column3): create a count table with up to three dimensions
+-   prop.table(table, margin): provides proportion of counts, based upon the margin
+-   summary(): provides summary information for all columns in data frame
+-   substr(string, first, last): substring of provided string, with a given first and last letter index
+-   str_trim(string, side): trim a string on the provided side
+-   paste(string, string, sep): combines two strings in order with a certain separator
+-   is.na(column): provides a TRUE/FALSE vector for whether the cell is NA
+-   NROW(df): provides the number of rows in a data frame
+-   length(vector): provides the length of a vector
+-   unique(df): provide the unique rows of a data frame (or vector)
+
+```{r}
+
+#Here is the rabbits data frame along with some extra data frames.
+rabbits
+more.rabbits <- data.frame(Name = c("Willy", "Dotty", "Rabbit"), 
+                           EarType = c("lop", "up", "up"),
+                           Sex = c("M", "F", "M"), 
+                           BondPartner = c("Dotty", "Willy", NA),
+                           Weight = c(2.2, 5.3, 3.1),
+                           Length = c(9, 18, 12), 
+                           Age = c(4, 5, 2))
+more.rabbits$BMI <-  more.rabbits$Weight/(more.rabbits$Length^2) * 703
+
+more.rabbits$BMI_category <- NA
+more.rabbits[which(more.rabbits$BMI < 15),]$BMI_category <-"Underweight"
+more.rabbits[which(more.rabbits$BMI >= 15 & more.rabbits$BMI < 25),
+             ]$BMI_category <-"Healthy Weight"
+#more.rabbits[which(more.rabbits$BMI >= 25 & more.rabbits$BMI < 32),
+#             ]$BMI_category <-"Overweight"
+#more.rabbits[which(more.rabbits$BMI >= 32),
+#             ]$BMI_category <-"Very Overweight"
+
+#Notice that I am including entries for the more.rabbits rows.
+rabbits.extra.columns <- data.frame(Vaccinated = c(FALSE, TRUE, TRUE, FALSE, TRUE, TRUE,
+                                                    TRUE, FALSE, TRUE, TRUE, TRUE, TRUE,
+                                                    TRUE, TRUE,  TRUE, TRUE, TRUE, TRUE,
+                                                   TRUE, FALSE), 
+                          Date_Entered = as.Date(c("2022-06-24","2022-06-24","2022-06-24",
+                                    "2022-06-24", "2022-06-24","2022-06-24",
+                                    "2022-06-24", "2022-06-24","2022-06-24",                                                                                   "2022-06-24", "2022-06-24","2022-06-24",
+                                    "2022-06-24", "2022-06-24","2022-06-24",
+                                    "2022-06-24", "2022-06-24","2022-07-25",
+                                    "2022-07-25", "2022-07-25" )))
+
+
+
+#Add rows
+rabbits <- rbind(rabbits, more.rabbits)
+rabbits
+
+#Add columns
+rabbits <- cbind(rabbits, rabbits.extra.columns)
+rabbits
+
+#Table counting EarType and Sex
+table(rabbits$EarType, rabbits$Sex)
+
+
+#proportions of the entire table
+prop.table(table(rabbits$EarType, rabbits$Sex))
+#proportions of the rows
+prop.table(table(rabbits$EarType, rabbits$Sex), margin = 1)
+#proportions of the columns
+prop.table(table(rabbits$EarType, rabbits$Sex), margin = 2)
+
+#summary information for all columns in data frame
+summary(rabbits)
+
+#Abbreviate the ear type, going from space 1 to space 1.
+EarType.abv <- substr(rabbits$EarType, 1, 1)
+EarType.abv
+
+#Adding trailing spaces to the Name for an example
+#Here I add a fixed string using paste with no seperation
+rabbits$Name <- paste(rabbits$Name, "  ", sep = "")
+rabbits$Name
+#Trim the trailing spaces (right side)
+rabbits$Name <-  stringr::str_trim(rabbits$Name, side = "right")
+
+#Only subset the rows with an unbonded rabbit (NA for BondPartner).
+rabbits.not.bonded <- rabbits[which(is.na(rabbits$BondPartner)),]
+rabbits.not.bonded
+
+#Number of rows in the data frame
+NROW(rabbits)
+
+#Length of a vector
+length(rabbits$Name)
+
+#Unique values in a column. 
+#Can also be used to output unique rows in a data frame
+unique(rabbits$Sex)
+```
+
+### Installing from github/gitlab
+
+The process to get a package onto CRAN is involved and lengthy.
+Therefore, many important packages are located in online git repositories not governed by the CRAN approval process.
+You should always be wary of such packages, because they have not been vetted.
+However, it is relatively easy to install packages from these sources.
+
+I will show how to install a package of functions from the AIM gitlab repository.
+In order to do this you will need to install \[the **Rtools** program\]{https://cran.r-project.org/bin/windows/Rtools/} and the **devtools** package.
+Both are on CRAN, but Rtools needs to be installed outside of R.
+Once you have installed both of these use the following commands.
+
+```{r, eval = FALSE}
+#Load the devtools package
+library(devtools)
+
+#Install the AIMutils package from the lsaim UW gitlab repository
+install_gitlab("lsaim/AIMutils", host = "git.doit.wisc.edu")
+
+
+```
+
+## Tidyverse
+
+One strength of R is its extendability from being open source.
+Anyone can add onto the R language with additional functions, and by meeting certain conditions they can get added to the CRAN repository.
+One of the most important additions to CRAN has been a collection of packages (including "dplyr", "stringr", "tibble", "ggplot2", and others) maintained by R-Studio and packaged together into a library called "tidyverse." We have already used a few of these packages, and you can install them separately, but when used together they allow you to use R in a different way.
+
+Most of the tidyverse functions can be used in base R, without changing how you code.
+But a few features included in the tidyverse make more fundamental changes to how you code.
+These include **pipes** (%\>%), functions like **summarize()**, **filter()**, and **inner_join()** to accomplish what we have used functions like aggregate(), \[\], and merge(), and a souped up version of a data frame called a **tibble**.
+The tibble is the least interesting part of this, and can sometimes be annoying, but most tidyverse functions will create tibbles instead of data frames.
+This will almost never matter, but you can always use **as.data.frame()** on a tibble to get an old-fashioned data frame instead.
+For instance, write.xlsx() will not accept tibbles, and so you will have to convert any tibble to a data frame when outputting an excel file using it.
+
+### Pipes and Overall Structure
+
+The cornerstone of the tidyverse way of coding is processing of data through a series of steps, passing the data through these "pipes" after each step, and not outputting the data until the end of the process.
+This makes for more readable and compact code.
+It also makes it easier to apply a variety of different functions from the tidyverse that make rather complex processes quite simple.
+To see how this works I'll compare some tidyverse code to the Base-R code you have already learned.
+However, in the same script you can use both Base-R code and tidyverse code as you wish.
+The tidyverse doesn't replace Base-R, it is just another tool to make your life easier.
+Note that some tidyverse functions have a short-hand way of coding that also works (for instance omitting the "."), but I will always include the long-form of the command.
+I recommend you do too for a while, so that you remember what you are doing.
+
+```{r}
+
+#Using the rabbits data frame, this filters, selects some columns,
+# and then makes some new columns. Finally rename two columns:
+#
+##Base-R
+overweight.rabbits.base <- rabbits[which(rabbits$BMI_category %in% 
+                            c("Overweight", "Very Overweight") ),
+                            c("Name", "EarType", "Sex", 
+                              "Age","Weight","Length", "Vaccinated")]
+overweight.rabbits.base$Weight_kg <- overweight.rabbits.base$Weight * 0.45359237
+overweight.rabbits.base$Length_cm <- overweight.rabbits.base$Length * 2.54
+colnames(overweight.rabbits.base) <- c("Name", "EarType", "Sex", 
+                                       "Age","Weight_lb","Length_inch", 
+                                       "Vaccinated", "Weight_kg", "Length_cm")
+
+overweight.rabbits.base
+
+##Tidy R
+#You begin with the source data and then you pipe it to each additional step.
+#The "." represents the data that goes through the pipe.
+#You can use column names without the data frame first (and $) and without quotes.
+library(tidyverse) #Install this if it isn't already - see all the packages it installs.
+overweight.rabbits.tidy <- rabbits %>% 
+                          filter( . , BMI_category %in% 
+                                    c("Overweight", "Very Overweight")) %>%
+                          select( . , Name, EarType, Sex, Age, 
+                                  Weight, Length, Vaccinated) %>%
+                          mutate( . , Weight_kg = Weight * 0.45359237,
+                                    Length_cm = Length * 2.54) %>%
+                          rename( . ,Weight_lb = Weight, Length_inch = Length)
+
+overweight.rabbits.tidy
+
+
+#You can also aggregate values easily using tidy.
+#
+##Base-R
+rabbits.mean.weight.by.sex.ear <- aggregate(rabbits$Weight, 
+                                       by = list(rabbits$Sex, rabbits$EarType), 
+                                       FUN = mean)
+colnames(rabbits.mean.weight.by.sex.ear) <- c("Sex", "EarType", "Mean_Weight")
+
+rabbits.count.by.sex.ear <- as.data.frame(table(rabbits$Sex, rabbits$EarType))
+colnames(rabbits.count.by.sex.ear) <- c("Sex", "EarType", "n")
+
+rabbits.summary.weight.by.sex.ear.base <- merge(x = rabbits.mean.weight.by.sex.ear, 
+                                           y = rabbits.count.by.sex.ear, 
+                                           by = c("Sex", "EarType"))
+
+rabbits.summary.weight.by.sex.ear.base
+
+
+##Tidy R
+rabbits.summary.weight.by.sex.ear.tidy <- rabbits %>%
+                                          group_by( . , Sex, EarType) %>%
+                                          summarize( . , Mean_Weight = mean(Weight),
+                                                    n = n())
+
+rabbits.summary.weight.by.sex.ear.tidy
+
+
+```
+
+I'll break down the two sets of tidy code so that you can see what is going on.
+Because a data frame is produced after every new line of tidy code, you can always run a part of the tidy code by just selecting everything before the last pipe (%\>%) that you want to include.
+
+```{r}
+
+#The first section of code that filters and creates a new variable.
+
+##Begin with the rabbits data frame and then filter it, only including 
+###rows of "Overweight" and "Very Overweight" rabbits.
+overweight.rabbits.tidy <- rabbits %>% 
+                          filter( . , BMI_category %in% 
+                                    c("Overweight", "Very Overweight"))
+
+overweight.rabbits.tidy
+
+
+##After the filter, only select the columns listed. Note that columns can be 
+###excluded by putting a `-` in front of them.
+overweight.rabbits.tidy <- rabbits %>% 
+                          filter( . , BMI_category %in% 
+                                    c("Overweight", "Very Overweight")) %>%
+                          select( . , Name, EarType, Sex, Age, 
+                                  Weight, Length, Vaccinated) 
+
+overweight.rabbits.tidy
+
+
+##Mutate has a strange name, but this just means create a new column that is some
+###function of other columns. You can also use this to change existing columns by 
+###just listing an existing column in the list of columns to mutate.
+overweight.rabbits.tidy <- rabbits %>% 
+                          filter( . , BMI_category %in% 
+                                    c("Overweight", "Very Overweight")) %>%
+                          select( . , Name, EarType, Sex, Age, 
+                                  Weight, Length, Vaccinated) %>%
+                          mutate( . , Weight_kg = Weight * 0.45359237,
+                                    Length_cm = Length * 2.54)
+
+overweight.rabbits.tidy
+
+
+
+##Finally this renames Weight and Length columns so that they have a similar 
+###convention as Weight_kg and Length_cm that were created with mutate.
+###The new column name is on the left of the '='. You can also rename in this 
+###way using the select function.
+overweight.rabbits.tidy <- rabbits %>% 
+                          filter( . , BMI_category %in% 
+                                    c("Overweight", "Very Overweight")) %>%
+                          select( . , Name, EarType, Sex, Age, 
+                                  Weight, Length, Vaccinated) %>%
+                          mutate( . , Weight_kg = Weight * 0.45359237,
+                                    Length_cm = Length * 2.54) %>%
+                          rename( . ,Weight_lb = Weight, Length_inch = Length)
+
+overweight.rabbits.tidy
+
+
+#The second section of code that filters and creates a new variable.
+
+##Begin by using group_by to group the data for later analysis. Note that
+###This does not change the data at all, it just changes the data frame 
+###structure telling any aggregation functions to use these groups.
+rabbits.summary.weight.by.sex.ear.tidy <- rabbits %>%
+                                          group_by( . , Sex, EarType)
+
+##The groups are used in the summarize statement. This produces a data frame 
+###that aggregates the data in whatever ways you specify (here the mean weight and 
+###the number of rows using the n() function.)
+rabbits.summary.weight.by.sex.ear.tidy <- rabbits %>%
+                                          group_by( . , Sex, EarType) %>%
+                                          summarize( . , Mean_Weight = mean(Weight),
+                                                    n = n())
+
+
+
+```
+
+### Useful Tidy Functions
+
+One of the reasons why the tidyverse is great is the handy set of functions that allow you to do complex data processing and analysis with ease.
+Note that most functions listed in the Base-R function section will also work (some of them are even part of the tidyverse).
+Below I list and then demonstrate just a few of the functions that can be found in the tidyverse.
+If you need something that isn't listed, google is one of the best sources.
+
+-   select(., columns): Select columns listed, separated by a ','. '-' in front of the column means that it is excluded.
+-   rename(., new_column_name = old_column_name): Rename column(s), listed columns separated by a ','.
+-   mutate(., created_column = calculation): Create a new calculated column using a calculation. Multiple calculated columns separated by a ','.
+-   group_by(., columns): Set the columns by which to group aggregations.
+-   summarize(., created_column = aggregation): calculate aggregation in the created_column. Will transform the data frame into a aggregation of the original data.
+-   inner_join(x = data_frame1, y = data_frame2, by = columns): Like a SQL inner join using specified columns. Equivalent to merge(...,all.x = FALSE, all.y = FALSE), or the default merge.
+-   left_join(x = data_frame1, y = data_frame2, by = columns): Like a SQL left join using specified columns. Equivalent to merge(...,all.x = TRUE).
+-   right_join(x = data_frame1, y = data_frame2, by = columns): Like a SQL right join using specified columns. Equivalent to merge(...,all.y = TRUE).
+-   full_join(x = data_frame1, y = data_frame2, by = columns): Like a SQL full outer join using specified columns. Equivalent to merge(...,all.x = TRUE, all.y = TRUE).
+-   spread(., key, value ): Change data from long to wide, with each value in key becoming a column, with the column in value becoming the value. Note that this is deprecated to pivot_longer but still works.
+-   gather(., key, value, columns to gather ): Change data from wide to long, specifying a new key and value columns and making the columns to gather into values of the key.
+
+I will demonstrate each function above separately without using pipes %\>%.
+This means that the data frame will be in place of the `.` I used above.
+But remember that any one of these functions can be used as part of a tidy data process that uses the pipe.
+
+```{r, warning = FALSE}
+
+# Select only Name, EarType, and Sex columns from rabbits data frame. 
+select(.data = rabbits, Name, EarType, Sex)
+
+# Select can also be used to rename and select at the same time.
+select(.data = rabbits, Rabbit_Name = Name, EarType, Sex)
+
+# Using a '-' in front of a  column will eliminate it instead of select it.
+select(.data = rabbits,  -Name, -EarType, -Sex)
+
+# rename will rename a set of columns without changing the columns selected
+rename(.data = rabbits, Rabbit_Name = Name)
+
+# Mutate creates a calculated column.
+## I'm going to select only a few columns using a base function for easy reading.
+## Remember that you can overwrite existing variables by just using that variable's name
+mutate(.data = rabbits[,c("Name", "Weight")], Weight_kg = Weight * 0.45359237)
+
+# You can create summary stats to use in your mutate calculations.
+mutate(.data = rabbits[,c("Name", "Weight")], 
+       Weight_above_median = Weight - median(Weight))
+
+# You can use group_by to set the groups for the aggregation in mutate as well.
+## This finds the amount of weight a rabbit is above the median by sex.
+## Here I'll use pipes, because of the multiple steps.
+## The mutate statement is the same as above.
+rabbits[,c("Name", "Sex","Weight")] %>% group_by(., Sex) %>%
+mutate(.data = ., Weight_above_median = Weight - median(Weight))
+
+# You can find summary  statistics using summarize
+summarize(.data = rabbits, Mean_weight = mean(Weight), Median_weight = median(Weight))
+
+# If you want to group the data in the summary output use group_by (with a pipe)
+# Note that the summarize statement is the same as above.
+
+rabbits %>% group_by(. , Sex) %>%
+  summarize(.data = ., Mean_weight = mean(Weight), Median_weight = median(Weight))
+
+# Inner Join keeps only rows shared between both data frames. 
+## Note the by for when columns names are not identical between data frames.
+inner_join(x = rabbits[,c("Name", "Weight")], y = adoption.applications,
+           by = c("Name" = "rabbit_name"))
+
+# Keeps all rows in rabbits
+left_join(x = rabbits[,c("Name", "Weight")], y = adoption.applications,
+           by = c("Name" = "rabbit_name"))
+
+# Keeps all rows in adoption.applications
+right_join(x = rabbits[,c("Name", "Weight")], y = adoption.applications,
+           by = c("Name" = "rabbit_name")) 
+
+# Keeps all rows in both data frames
+full_join(x = rabbits[,c("Name", "Weight")], y = adoption.applications,
+           by = c("Name" = "rabbit_name")) 
+
+# The syntax is simpler when join columns have the same names.
+rename(.data = rabbits, rabbit_name = Name) %>%
+inner_join(x = ., y = adoption.applications,
+           by = "rabbit_name")
+
+# Here is an example of joining on more than one column using a summary data frame.
+## I use this example (using pipes) just because I don't have another convenient 
+## data frame to join on two columns.
+
+rabbits %>% group_by(.data = ., Sex, EarType) %>% 
+  summarize(.data = ., Sex_EarType_Mean_Weight = mean(Weight)) %>%
+  inner_join(x = ., y = rabbits, by = c("Sex", "EarType"))
+
+# I'll needlessly name the columns something different to show how the syntax works
+## with more than one column
+rabbits %>% group_by(.data = ., Sex, EarType) %>% 
+  summarize(.data = ., Sex_EarType_Mean_Weight = mean(Weight)) %>%
+  rename(.data = ., Rabbit_Sex = Sex, Rabbit_EarType = EarType) %>%
+  inner_join(x = ., y = rabbits, by = c("Rabbit_Sex" = "Sex", 
+                                    "Rabbit_EarType" = "EarType"))
+  
+# I'll take the mean weight long table and make it wide by pivoting Sex.
+
+rabbits %>% group_by(.data = ., Sex, EarType) %>% 
+  summarize(.data = ., Sex_EarType_Mean_Weight = mean(Weight)) %>%
+  spread(data = ., key = Sex, value = Sex_EarType_Mean_Weight)
+
+# I'll make that wide data long again. 
+## The first part is just from above and is saved into a variable.
+ 
+wide.mean.weights <- rabbits %>% group_by(.data = ., Sex, EarType) %>% 
+  summarize(.data = ., Sex_EarType_Mean_Weight = mean(Weight)) %>%
+  spread(data = ., key = Sex, value = Sex_EarType_Mean_Weight)
+# Note that key and value canned be named whatever you want in the new table.
+gather(data = wide.mean.weights, key = "Sex", 
+       value = "Mean_Weight", M, F )
+
+
+
+
+
+```
+
+## Connecting to Data
+
+### Storing Credentials
+
+Typically you do not want to have to enter credentials manually when connecting to databases and other data sources.
+There are several ways of storing credentials securely in R.
+I demonstrate a method that also allows for scripts that reference an individual's credentials without typing user names into the script.
+So those scripts can be used by multiple people without any changes to the text.
+
+The first step is to store database user names (which do not need to be encrypted) in the R environment file (.Renviron).
+This is usually stored in your Documents folder, but because it has a "." in front of the name, it is hidden by Windows.
+There is an easy way to access and edit this, however, using the usethis package (it should be installed with the devtools package you have already installed).
+
+```{r, eval = FALSE}
+#Run the below command (commented) and add your database usernames.
+usethis::edit_r_environ()
+
+#When .Renviron opens enter the following lines 
+#with your user names (NOT passwords) in 
+#place of <usr> and <netid@wisc.edu>
+
+INFOACCESS = "<usr>"
+DARSP = "<usr>"
+BadgerAnalytics = "<netid@wisc.edu>"
+
+```
+
+Putting user names in your R environment file makes it easy to access user names with generic r commands, regardless of who is using the script.
+I'll show you how to do that below.
+
+Next, I'll show how to add your passwords to your encrypted Windows or Mac keyring.
+One benefit of this is that it uses your default system method of storing credentials in a secure location.
+The AIMutils package contains helper functions for saving these passwords.
+BadgerAnalytics uses Single Sign On credentials through your browser, so is not included here.
+
+```{r, eval = FALSE}
+
+#Install the keyring package if it isn't already installed.
+#install.packages("keyring")
+#Install the AIMutils package (from gitlab) if it isn't already installed.
+#library(devtools)
+#install_gitlab(repo = "lsaim/AIMutils",host="git.doit.wisc.edu")
+library(AIMutils)
+#This will save a password using the username in the .Renviron file
+save.INFOACCESS.password()
+save.DARSP.password()
+#This will save a password using the username given in <usr>.
+save.INFOACCESS.password("<usr>")
+save.DARSP.password("<usr>")
+
+```
+
+### Connecting to UW-Madison Data Sources
+
+The easiest way to connect to campus data sources in R is using the odbc connection tools in the **dbplyr** package.
+I will discuss how to connect to Oracle campus databases (InfoAccess and DARSP) as well as Snowflake (Badger Analytics).
+I will also present several helper functions in the **AIMutils** package available through gitlab.
+Install that with the following command:
+
+```{r, eval=FALSE}
+install_gitlab(repo = "lsaim/AIMutils",host="git.doit.wisc.edu")
+```
+
+The first step is to set up ODBC connections in your Windows or Mac ODBC Data Sources program.
+Make sure to run the 64-bit version and to run it with administrative privileges.
+This is the same setup for ODBC data sources used in Toad, Tableau, and other campus data tools.
+For instructions of how to do this for Badger Analytics see \[the KB provided by ODMAS\]{https://kb.wisc.edu/msndata/page.php?i
+d=120845}.
+Connections to Oracle databases follow a similar procedure, except you need to select the TNSNames.ora entry for the database you are interested in.
+Additionally, in order to use the database helper packages in AIMutils you need to give the collections the following names:
+
+-   INFOACCESS
+-   DARSP
+-   BadgerAnalytics
+
+R will connect using the ODBC connection and a database interface package called DBI.
+AIMutils contains a number of helper functions that autmatically set the parameters necessary to connect to the databases I've listed above.
+It will also use your username from your .Renviron file and your password in your system keyring.
+To connect to these databases do the following.
+
+```{r, eval = FALSE}
+#Install DBI if it isn't already installed.
+#install.packages("DBI")
+library(AIMutils)
+#These commands will open campus database connections 
+##using your stored credentials and store them in a variable.
+##You will use this variable when querying
+INFOACCESScon <- open.INFOACCESS.connection()
+DARSPcon <- open.DARSP.connection()
+#The Badger Analytics connections will open up a browser window
+##so that you can log in with Single Sign On.
+BadgerAnalyticscon <- open.BadgerAnalytics.connection()
+
+```
+
+### Querying Databases.
+
+The simplest way to query databases in R is simply writing SQL into character string variables and then using that string as a parameter along with the database connection in the DBI::dbGetQuery function.
+Additionally, the dbplyr package contains lots of handy tools for working with SQL in R.
+It may be worth your time to explore its functions.
+
+Here is how you would make a simple query to INFOACCESS and then save that data to a variable.
+I will not actually run this query, but try it yourself if you have credentials.
+
+```{r, eval = FALSE}
+
+query1_SQL <- "SELECT DISTINCT
+                UW.STDNT_DIRECTORY_MULTITERM.ID,
+                UW.STDNT_DIRECTORY_MULTITERM.TERM
+                FROM UW.STDNT_DIRECTORY_MULTITERM
+                WHERE UW.STDNT_DIRECTORY_MULTITERM.TERM = '1224'"
+
+directory.data <- DBI::dbGetQuery(INFOACCESScon, query1_SQL)
+
+
+```
+
+<!-- ::: -->

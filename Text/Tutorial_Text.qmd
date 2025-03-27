@@ -113,7 +113,7 @@ x
 ### Loading Data from Excel
 
 
-Now you are ready to read in some data and start working with it. For much of this tutorial we will work with anonymized public UW salary data (courtesy of [UFAS#223](https://ufas223.org/resources/")). It provides a variety of fields and might be similar to data that you may encounter in your job. Find the data [here](https://git.doit.wisc.edu/lsaim/R-Tutorial/-/blob/main/Example_Data/salary_data.xlsx), and place it in a new directory called "Example_Data" within the "R-Tutorial" folder you are working in.  
+Now you are ready to read in some data and start working with it. For much of this tutorial we will work with anonymized public UW salary data (courtesy of [UFAS#223](https://ufas223.org/resources/")). It provides a variety of fields and might be similar to data that you may encounter in your job. Find the data [here](https://github.com/mjzenz/R-Tutorial/tree/master/Example_Data), and place it in a new directory called "Example_Data" within the "R-Tutorial" folder you are working in.  
 Now you are ready to load the data into R using a function from the **readxl** package you just loaded. Note that R can load a variety of file formats, including .csv, as well as from other statistical packages like SPSS, SAS, and Stata. The easiest way to load data is via the upper-right pane and the "Environment" -> "Import Dataset" button. This will write the code to import data for you, but you can always just write it directly.
 
 The following command will read in the excel file, using the **read_excel** function from the readxl package and place that data into the salary.data **object** using **<-**. You can think of that like an arrow, placing whatever is on its right side into the object on the left side in your computer's memory. 
@@ -356,7 +356,7 @@ hist(salary.data$`Annual FTE Adjusted Salary`, breaks = 50)
 
 We've looked at a few functions that will help to summarize or change the contents of a data set, but one of the reasons to use R is that it is easy to combine data sets as well.  
 
-[Download](https://git.doit.wisc.edu/lsaim/R-Tutorial/-/blob/main/Example_Data/pay_grades.xlsx) the pay grades .xlsx file and place it into the same "Example_Data" folder as the salary file. We are going to load it and then join it to our existing data set.
+[Download](https://github.com/mjzenz/R-Tutorial/tree/master/Example_Data) the pay grades .xlsx file and place it into the same "Example_Data" folder as the salary file. We are going to load it and then join it to our existing data set.
 
 ```{r}
 #| warning: FALSE

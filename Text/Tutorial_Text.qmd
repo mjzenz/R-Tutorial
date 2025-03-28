@@ -1,7 +1,7 @@
 ---
 title: "Begin R"
 subtitle: An Introduction to R for Administrative Professionals
-author: "Michael J Zenz, L&S Academic Information Management"
+author: "Michael J Zenz"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 format: 
   html:
